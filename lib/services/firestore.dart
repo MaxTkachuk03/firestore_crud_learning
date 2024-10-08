@@ -14,8 +14,23 @@ class FriestoreServices {
   }
 
   //@ READ: get notes from database
+  Stream<QuerySnapshot> getNotesStream() {
+    final notesStream =
+        notesCollection.orderBy('timestamp', descending: true).snapshots();
+
+    return notesStream;
+  }
 
   //@ UPDATE: update notes given a doc id
+  Future<void> updateNote(String docId, String newNote) {
+    return notesCollection.doc(docId).update({
+      'note': newNote,
+      'timestamp': Timestamp.now(),
+    });
+  }
 
   //@ DELETE: delete notes given a doc id
+  Future<void> deleteNote(String docId) {
+    return notesCollection.doc(docId).delete();
+  }
 }
