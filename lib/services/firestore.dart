@@ -6,11 +6,15 @@ class FriestoreServices {
       FirebaseFirestore.instance.collection('notes');
 
   //@ CREATE: add a new note
-  Future<void> addNote(String note) {
-    return notesCollection.add({
-      'note': note,
-      'timestamp': Timestamp.now(),
-    });
+  Future<void> addNote(String note) async {
+    try {
+      await notesCollection.add({
+        'note': note,
+        'timestamp': Timestamp.now(),
+      });
+    } catch (e) {
+      Exception('Error adding note: $e');
+    }
   }
 
   //@ READ: get notes from database
@@ -22,15 +26,19 @@ class FriestoreServices {
   }
 
   //@ UPDATE: update notes given a doc id
-  Future<void> updateNote(String docId, String newNote) {
-    return notesCollection.doc(docId).update({
-      'note': newNote,
-      'timestamp': Timestamp.now(),
-    });
+  Future<void> updateNote(String docId, String newNote) async {
+    try {
+      await notesCollection.doc(docId).update({
+        'note': newNote,
+        'timestamp': Timestamp.now(),
+      });
+    } catch (e) {
+      Exception('Error updating note: $e');
+    }
   }
 
   //@ DELETE: delete notes given a doc id
-  Future<void> deleteNote(String docId) {
-    return notesCollection.doc(docId).delete();
+  Future<void> deleteNote(String docId) async {
+    await notesCollection.doc(docId).delete();
   }
 }
