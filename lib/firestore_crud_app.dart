@@ -1,5 +1,4 @@
 import 'package:firestore_crud_learning/provider/theme_provider.dart';
-import 'package:firestore_crud_learning/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
