@@ -37,58 +37,56 @@ class _MyHomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
-      return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: MyAppBar(
-          onPressed: () => themeProvider.toggleTheme(),
-        ),
-        body: SafeArea(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: friestoreServices.getNotesStream(),
-              builder: (context, snapshot) {
-                //@ if we have data, get all the docs
-                if (snapshot.hasData) {
-                  List notesList = snapshot.data!.docs;
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: MyAppBar(
+        onPressed: () => context.read<ThemeProvider>().toggleTheme(),
+      ),
+      body: SafeArea(
+        child: StreamBuilder<QuerySnapshot>(
+            stream: friestoreServices.getNotesStream(),
+            builder: (context, snapshot) {
+              //@ if we have data, get all the docs
+              if (snapshot.hasData) {
+                List notesList = snapshot.data!.docs;
 
-                  //@ display as a list
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(top: 16.0, bottom: 36.0),
-                      itemCount: notesList.length,
-                      itemBuilder: (context, index) {
-                        // get each individual doc
-                        DocumentSnapshot document = notesList[index];
-                        String docId = document.id;
+                //@ display as a list
+                return ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(top: 16.0, bottom: 36.0),
+                    itemCount: notesList.length,
+                    itemBuilder: (context, index) {
+                      // get each individual doc
+                      DocumentSnapshot document = notesList[index];
+                      String docId = document.id;
 
-                        //@ get note from each doc
-                        Map<String, dynamic> data =
-                            document.data() as Map<String, dynamic>;
-                        String noteText = data['note'];
+                      //@ get note from each doc
+                      Map<String, dynamic> data =
+                          document.data() as Map<String, dynamic>;
+                      String noteText = data['note'];
 
-                        //@ display a list tile
-                        return NoteItem(
-                          noteText: noteText,
-                          docId: docId,
-                          friestoreServices: friestoreServices,
-                          noteController: noteController,
-                        );
-                      });
-                }
-                //@ if no notes return nothing
-                else {
-                  return Text(S.of(context).emptyBox);
-                }
-              }),
-        ),
-        floatingActionButton: MyFloatButton(
-          onPressed: () => openNoteBox(
-              context: context,
-              friestoreServices: friestoreServices,
-              noteController: noteController),
-          child: AppIcons.addIcon,
-        ),
-      );
-    });
+                      //@ display a list tile
+                      return NoteItem(
+                        noteText: noteText,
+                        docId: docId,
+                        friestoreServices: friestoreServices,
+                        noteController: noteController,
+                      );
+                    });
+              }
+              //@ if no notes return nothing
+              else {
+                return Text(S.of(context).emptyBox);
+              }
+            }),
+      ),
+      floatingActionButton: MyFloatButton(
+        onPressed: () => openNoteBox(
+            context: context,
+            friestoreServices: friestoreServices,
+            noteController: noteController),
+        child: AppIcons.addIcon,
+      ),
+    );
   }
 }
